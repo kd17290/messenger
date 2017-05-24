@@ -12,7 +12,7 @@
 <script>
 // Note that the path doesn't matter for routing; any WebSocket
 // connection gets bumped over to WebSocket consumers
-socket = new WebSocket("ws://" + window.location.host + "/message-updates/1/");
+socket = new WebSocket("ws://" + window.location.host + "/message-updates/{{user_id}}/");
 socket.onmessage = function(e) {
     var data = JSON.parse(e.data);
     var messageNode = document.createElement('div');
