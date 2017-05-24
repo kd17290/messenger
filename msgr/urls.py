@@ -16,10 +16,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from messaging.views import RecentConversationsView, SendMessageView, UserMessagesView
+from messaging.views import RecentConversationsView, SendMessageView, UserMessagesView, updates_view
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^updates/(?P<user_id>[0-9]+)/', updates_view),
     url(r'^api/', include([
         url(r'recent-conversations/', RecentConversationsView.as_view()),
         url(r'send-message/', SendMessageView.as_view()),

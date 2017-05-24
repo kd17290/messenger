@@ -1,9 +1,13 @@
 # Create your views here.
+import json
+
+from channels.channel import Group
 from django.contrib.auth import get_user_model
 from django.db.models.aggregates import Max, Sum
 from django.db.models.expressions import Case, When, F
 from django.db.models.fields import IntegerField
 from django.db.models.query import Prefetch
+from django.shortcuts import render
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.pagination import LimitOffsetPagination
@@ -46,6 +50,17 @@ class SendMessageView(CreateAPIView):
         existing_conversation.last_message = serializer.instance
         existing_conversation.save()
 
+        message = serializer.instance
+        for user in existing_conversation.users.all():
+            if user == from_user:
+                continue
+            Group("message-updates-%s" % user.id).send({
+                "text": json.dumps({
+                    "message": message.content,
+                    "from_user": from_user.username
+                })
+            })
+
 
 class UserMessagesView(ListAPIView):
 
@@ -60,3 +75,7 @@ class UserMessagesView(ListAPIView):
         if not existing_conversation:
             return Message.objects.none()
         return existing_conversation.messages.order_by('-created')
+
+
+def updates_view(request, user_id):
+    return render(request, "messaging/updates.html", {"user_id": user_id})

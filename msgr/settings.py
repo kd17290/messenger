@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'common',
-    'messaging'
+    'messaging',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# In settings.py
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "msgr.routing.channel_routing",
+    },
+}
