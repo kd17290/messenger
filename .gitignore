@@ -1,6 +1,6 @@
-/enprobe/local_settings.py
 /.idea
 *.pyc
 __pycache__
 venv/
 messenger/
+db.sqlite3
